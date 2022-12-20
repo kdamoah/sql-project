@@ -19,7 +19,7 @@ This is a project I did as part of my comprehensive exams in fulfillment of my d
 
 
 ## Answered Questions and SQL Queries
-**Question 1**: Write statements for creating the four tables & insert data into each table as shown above.
+**Question 1: Write statements for creating the four tables & insert data into each table as shown above.**
 
 CREATE TABLE "Customer" (
 	"CustomerID"	INTEGER,
@@ -108,7 +108,7 @@ INSERT INTO CreditRating (CreditID, CreditDescription, Comments)
 VALUES (7, "Unkown", "Paid cash without looking into financing options");
 
 
-**Question 2**: Write a query to show a list of customers whose last name begin with the letter “K”. Show the first and last names of these customers. Sort the list of customers in descending order by last name.
+**Question 2: Write a query to show a list of customers whose last name begin with the letter “K”. Show the first and last names of these customers. Sort the list of customers in descending order by last name.**
 
 SELECT CustomerFirstName, CustomerLastName 
 FROM Customer 
@@ -116,21 +116,21 @@ WHERE CustomerLastName LIKE 'K%'
 ORDER BY CustomerLastName DESC;
 
 
-**Question 3**: Write a query to generate a list of customers with annual incomes greater than $50,000 that purchased a car. Show the first name, last name, and annual income for each of these customers. (HINT: Purchase will have a value of “Yes”)
+**Question 3: Write a query to generate a list of customers with annual incomes greater than $50,000 that purchased a car. Show the first name, last name, and annual income for each of these customers. (HINT: Purchase will have a value of “Yes”)**
 
 SELECT CustomerFirstName, CustomerLastName, AnnualIncome
 FROM Customer, Encounter
 WHERE Customer.CustomerID = Encounter.CustomerID AND AnnualIncome > 50000 AND Purchase = 'Yes';
 
 
-**Question 4**: Write a query to find which customers purchased vehicles despite having a “Good” or “Very Good” credit description?  Show the first name, last name, and credit description for these customers.
+**Question 4: Write a query to find which customers purchased vehicles despite having a “Good” or “Very Good” credit description?  Show the first name, last name, and credit description for these customers.**
 
 SELECT CustomerFirstName, CustomerLastName, CreditDescription
 FROM Customer, Encounter, CreditRating
 WHERE Customer.CustomerID = Encounter.CustomerID AND Customer.CreditID = CreditRating.CreditID AND Purchase = 'Yes' AND CreditDescription IN ('Good', 'Very Good');
 
 
-**Question 5**: Write a query that list salespeople’s first name, last name, and salary for salespeople who have 2 or more customers.
+**Question 5: Write a query that list salespeople’s first name, last name, and salary for salespeople who have 2 or more customers.**
 
 SELECT SalesPerson.SalesFirstName, SalesPerson.SalesLastName, SalesPerson.SalesSalary
 FROM Encounter
@@ -139,7 +139,7 @@ GROUP BY SalesFirstName
 HAVING COUNT(SalesFirstName) >= 2;
 
 
-**Question 6**: Write a query to compute a commission (5% of salary) and show this calculated field as commission for salespeople who sold 3 or more cars. Also display salespeople’s first name and last name. Sort the list in ascending order by salespeople’s last name.
+**Question 6: Write a query to compute a commission (5% of salary) and show this calculated field as commission for salespeople who sold 3 or more cars. Also display salespeople’s first name and last name. Sort the list in ascending order by salespeople’s last name.**
 
 SELECT SalesPerson.SalesFirstName, SalesPerson.SalesLastName, (SalesPerson.SalesSalary * 0.05) AS SalesCommission
 FROM Encounter
@@ -149,7 +149,7 @@ HAVING Purchase = 'Yes' AND COUNT(Purchase) >= 3
 ORDER BY SalesLastName ASC;
 
 
-**Question 7**: Construct a query to show the salespeople’s first name and the average annual income of their customers as “Average Income” in your result. (HINT: You do not need to include a criterion for Purchase in this query)
+**Question 7: Construct a query to show the salespeople’s first name and the average annual income of their customers as “Average Income” in your result. (HINT: You do not need to include a criterion for Purchase in this query)**
 
 SELECT SalesFirstName, AVG(AnnualIncome) AS 'Average Income'
 FROM Encounter
