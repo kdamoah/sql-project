@@ -21,45 +21,54 @@ This is a project I did as part of my comprehensive exams in fulfillment of my d
 ## Answered Questions and SQL Queries
 **Question 1: Write statements for creating the four tables & insert data into each table as shown above.**
 
+```
 CREATE TABLE "Customer" (
-	"CustomerID"	INTEGER,
-	"CustomerFirstName"	TEXT,
-	"CustomerLastName"	TEXT,
-	"CustomerPhone"	TEXT,
-	"AnnualIncome"	REAL,
-	"CreditID"	INTEGER,
+	"CustomerID" INTEGER,
+	"CustomerFirstName" TEXT,
+	"CustomerLastName" TEXT,
+	"CustomerPhone" TEXT,
+	"AnnualIncome" REAL,
+	"CreditID" INTEGER,
 	FOREIGN KEY("CreditID") REFERENCES "CreditRating"("CreditID"),
 	PRIMARY KEY("CustomerID")
 );
+```
 
+```
 CREATE TABLE "SalesPerson" (
-	"SalesID"	INTEGER,
-	"SalesFirstName"	TEXT,
+	"SalesID" INTEGER,
+	"SalesFirstName" TEXT,
 	"SalesLastName"	TEXT,
-	"SalesHireDate"	TEXT,
-	"SalesSalary"	REAL,
+	"SalesHireDate" TEXT,
+	"SalesSalary" REAL,
 	PRIMARY KEY("SalesID")
 );
+```
 
+```
 CREATE TABLE "Encounter" (
 	"EncID"	TEXT,
-	"SalesID"	INTEGER,
-	"CustomerID"	INTEGER,
-	"EncDate"	TEXT,
-	"Purchase"	TEXT,
+	"SalesID" INTEGER,
+	"CustomerID" INTEGER,
+	"EncDate" TEXT,
+	"Purchase" TEXT,
 	FOREIGN KEY("SalesID") REFERENCES "SalesPerson"("SalesID"),
 	FOREIGN KEY("CustomerID") REFERENCES "Customer"("CustomerID")
 );
+```
 
+```
 CREATE TABLE "CreditRating" (
-	"CreditID"	INTEGER,
-	"CreditDescription"	TEXT,
-	"MinFICO"	INTEGER,
-	"MaxFICO"	INTEGER,
-	"Comments"	TEXT,
+	"CreditID" INTEGER,
+	"CreditDescription" TEXT,
+	"MinFICO" INTEGER,
+	"MaxFICO" INTEGER,
+	"Comments" TEXT,
 	PRIMARY KEY("CreditID")
 );
+```
 
+```
 INSERT INTO Customer
 VALUES (1, "Clark", "Adams", 8017686043, 64250.00, 1),
 (10, "Hans", "Joiner", 8017638922, 38125.00, 6),
@@ -73,7 +82,9 @@ VALUES (1, "Clark", "Adams", 8017686043, 64250.00, 1),
 (7, "Lile", "Kimball", 8017855151, 52250.00, 3),
 (8, "Okon", "Okur", 8013561024, 29250.00, 4),
 (9, "Eric", "Knudsen", 8017689149, 40875.00, 7);
+```
 
+```
 INSERT INTO SalesPerson
 VALUES (1, "Lewis", "Peoples", "1989-02-13", 140000.00),
 (2, "Richard", "Martin", "1989-05-02", 82000.00),
@@ -81,7 +92,9 @@ VALUES (1, "Lewis", "Peoples", "1989-02-13", 140000.00),
 (4, "Rachel", "Scholls", "1996-04-27", 56000.00),
 (5, "Jesse", "Lukes", "1996-05-15", 75000.00),
 (6, "Maggy", "Adelman", "2001-06-01", 75000.00);
+```
 
+```
 INSERT INTO Encounter
 VALUES ("001", 1, 2, "2019-07-01", "Yes"),
 ("002", 1, 4, "2019-07-16", "Yes"),
@@ -95,7 +108,9 @@ VALUES ("001", 1, 2, "2019-07-01", "Yes"),
 ("010", 6, 8, "2019-10-18", "Yes"),
 ("011", 6, 3, "2019-07-02", "Yes"),
 ("012", 6, 7, "2019-07-02", "Yes");
+```
 
+```
 INSERT INTO CreditRating
 VALUES (1, "Extremely Poor", 300, 499, "Cannot extend credit"),
 (2, "Very Poor", 500, 580, "Owner approval required to extend credit"),
@@ -106,53 +121,66 @@ VALUES (1, "Extremely Poor", 300, 499, "Cannot extend credit"),
 
 INSERT INTO CreditRating (CreditID, CreditDescription, Comments)
 VALUES (7, "Unkown", "Paid cash without looking into financing options");
+```
 
 
 **Question 2: Write a query to show a list of customers whose last name begin with the letter “K”. Show the first and last names of these customers. Sort the list of customers in descending order by last name.**
 
+```
 SELECT CustomerFirstName, CustomerLastName 
 FROM Customer 
 WHERE CustomerLastName LIKE 'K%'
 ORDER BY CustomerLastName DESC;
+```
 
 
 **Question 3: Write a query to generate a list of customers with annual incomes greater than $50,000 that purchased a car. Show the first name, last name, and annual income for each of these customers. (HINT: Purchase will have a value of “Yes”)**
 
+```
 SELECT CustomerFirstName, CustomerLastName, AnnualIncome
 FROM Customer, Encounter
 WHERE Customer.CustomerID = Encounter.CustomerID AND AnnualIncome > 50000 AND Purchase = 'Yes';
+```
 
 
 **Question 4: Write a query to find which customers purchased vehicles despite having a “Good” or “Very Good” credit description?  Show the first name, last name, and credit description for these customers.**
 
+```
 SELECT CustomerFirstName, CustomerLastName, CreditDescription
 FROM Customer, Encounter, CreditRating
 WHERE Customer.CustomerID = Encounter.CustomerID AND Customer.CreditID = CreditRating.CreditID AND Purchase = 'Yes' AND CreditDescription IN ('Good', 'Very Good');
+```
 
 
 **Question 5: Write a query that list salespeople’s first name, last name, and salary for salespeople who have 2 or more customers.**
 
+```
 SELECT SalesPerson.SalesFirstName, SalesPerson.SalesLastName, SalesPerson.SalesSalary
 FROM Encounter
 INNER JOIN SalesPerson ON Encounter.SalesID = SalesPerson.SalesID
 GROUP BY SalesFirstName
 HAVING COUNT(SalesFirstName) >= 2;
+```
 
 
 **Question 6: Write a query to compute a commission (5% of salary) and show this calculated field as commission for salespeople who sold 3 or more cars. Also display salespeople’s first name and last name. Sort the list in ascending order by salespeople’s last name.**
 
+```
 SELECT SalesPerson.SalesFirstName, SalesPerson.SalesLastName, (SalesPerson.SalesSalary * 0.05) AS SalesCommission
 FROM Encounter
 INNER JOIN SalesPerson ON Encounter.SalesID = SalesPerson.SalesID
 GROUP BY SalesFirstName
 HAVING Purchase = 'Yes' AND COUNT(Purchase) >= 3
 ORDER BY SalesLastName ASC;
+```
 
 
 **Question 7: Construct a query to show the salespeople’s first name and the average annual income of their customers as “Average Income” in your result. (HINT: You do not need to include a criterion for Purchase in this query)**
 
-SELECT SalesFirstName, AVG(AnnualIncome) AS 'Average Income'
+```
+SELECT SalesFirstName, AVG(AnnualIncome) AS AverageIncome
 FROM Encounter
 INNER JOIN Customer ON Encounter.CustomerID = Customer.CustomerID
 INNER JOIN SalesPerson ON Encounter.SalesID = SalesPerson.SalesID
 GROUP BY SalesFirstName;
+```
